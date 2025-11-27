@@ -1,25 +1,21 @@
 run "deploy" {
-  command = apply
+  command   = "apply"
+  arguments = ["-auto-approve"]
 }
 
-run "validate" {
-  command = apply
+data "http" "test_endpoint" {
+  # utilise la valeur de l'output api_endpoint défini dans main.tf
+  url = run.deploy.outputs["api_endpoint"]
+}
 
-  module {
-    source = "../../modules/test-endpoint"
-  }
+# Vérifie le code HTTP
+assert {
+  condition     = data.http.test_endpoint.status_code == 200
+  error_message = "Unexpected status code: ${data.http.test_endpoint.status_code}"
+}
 
-  variables {
-    endpoint = run.deploy.api_endpoint
-  }
-
-  assert {
-    condition     = data.http.test_endpoint.status_code == 200
-    error_message = "Unexpected status code: ${data.http.test_endpoint.status_code}"
-  }
-
-  assert {
-    condition     = data.http.test_endpoint.response_body == "Hello, World!"
-    error_message = "Unexpected response body: ${data.http.test_endpoint.response_body}"
-  }
+# Vérifie le corps de la réponse
+assert {
+  condition     = data.http.test_endpoint.response_body == "Lab 5 reussi"
+  error_message = "Unexpected body: ${data.http.test_endpoint.response_body}"
 }
