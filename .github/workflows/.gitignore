@@ -1,0 +1,7 @@
+# OpenTofu / Terraform
+.terraform/
+**/.terraform/
+
+# Node.js
+node_modules/
+**/node_modules/
