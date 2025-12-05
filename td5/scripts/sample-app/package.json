@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "jest --verbose"
+    "test": "node node_modules/jest/bin/jest.js --verbose"
   },
   "dependencies": {
     "express": "^4.19.2"
